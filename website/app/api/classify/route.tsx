@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
-  const externalApiUrl = "http://127.0.0.1:8000/classify";
+  const externalApiUrl = "https://cec-2025.onrender.com/classify";
 
   try {
     const externalResponse = await fetch(externalApiUrl, {
