@@ -8,7 +8,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
-  const externalApiUrl = "https://cec-2025.onrender.com/classify";
+  const externalApiUrl = process.env.API_URL || "https://cec-2025.onrender.com/classify";
+
+  console.log("External API URL:", externalApiUrl);
 
   try {
     const externalResponse = await fetch(externalApiUrl, {
