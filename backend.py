@@ -20,8 +20,8 @@ async def classify(image_file: UploadFile = File(...)):
     # processed_image_base64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
     
     return {
-        "decision": prediction,
+        "classification": "Positive" if prediction == 1 else "Negative",
         "confidence": predicted_prob
     }
-
+ 
     
