@@ -1,0 +1,47 @@
+{
+    "positive": [
+      {
+        "range": "99-100%",
+        "interpretation": "Extremely high likelihood of tumor presence"
+      },
+      {
+        "range": "95-99%",
+        "interpretation": "High probability of tumor presence"
+      },
+      {
+        "range": "90-95%",
+        "interpretation": "Moderately high probability of tumor presence"
+      },
+      {
+        "range": "85-90%",
+        "interpretation": "Possible indication of tumor presence"
+      },
+      {
+        "range": "Below 85%",
+        "interpretation": "Low probability, though tumor presence cannot be ruled out"
+      }
+    ],
+    "negative": [
+      {
+        "range": "99-100%",
+        "interpretation": "Extremely high likelihood of no tumor"
+      },
+      {
+        "range": "95-99%",
+        "interpretation": "High probability of absence of tumor"
+      },
+      {
+        "range": "90-95%",
+        "interpretation": "Moderately high likelihood of no tumor"
+      },
+      {
+        "range": "85-90%",
+        "interpretation": "Possibility of a false negative"
+      },
+      {
+        "range": "Below 85%",
+        "interpretation": "Uncertain result; tumor presence cannot be fully excluded"
+      }
+    ]
+  }
+  
