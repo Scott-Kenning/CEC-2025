@@ -47,8 +47,9 @@ val_test_transform = transforms.Compose([
 print("loading images...")
 images = []
 labels = []
+filenames = []
 
-max_images_per_class = 25
+max_images_per_class = 10000
 
 for label, cls in enumerate(['no', 'yes']):
     cls_dir = os.path.join(data_dir, cls)
@@ -60,13 +61,14 @@ for label, cls in enumerate(['no', 'yes']):
         img = Image.open(img_path).convert('RGB')
         images.append(img)
         labels.append(label)
+        filenames.append(img_name)
         cur_images += 1
 
-X_train_pil, X_temp_pil, y_train, y_temp = train_test_split(
-    images, labels, test_size=0.3, random_state=42, stratify=labels
+X_train_pil, X_temp_pil, y_train, y_temp, train_filenames, remaining_filenames = train_test_split(
+    images, labels, filenames, test_size=0.3, random_state=42, stratify=labels
 )
-X_val_pil, X_test_pil, y_val, y_test = train_test_split(
-    X_temp_pil, y_temp, test_size=0.5, random_state=42, stratify=y_temp
+X_val_pil, X_test_pil, y_val, y_test, val_filenames, test_filenames = train_test_split(
+    X_temp_pil, y_temp, remaining_filenames, test_size=0.5, random_state=42, stratify=y_temp
 )
 
 X_train_t = [train_transform(img) for img in X_train_pil]
@@ -90,8 +92,9 @@ val_loader = torch.utils.data.DataLoader(
     torch.utils.data.TensorDataset(X_val, y_val),
     batch_size=batch_size, shuffle=False
 )
+test_dataset = torch.utils.data.TensorDataset(X_test, y_test)
 test_loader = torch.utils.data.DataLoader(
-    torch.utils.data.TensorDataset(X_test, y_test),
+    [(test_dataset[i][0], test_dataset[i][1], test_filenames[i]) for i in range(len(test_dataset))],
     batch_size=batch_size, shuffle=False
 )
 
@@ -166,13 +169,20 @@ for epoch in range(num_epochs):
     print(f"  val prec:   {val_precision}")
 
 model.eval()
-preds, targets = [], []
+preds, targets, names = [], [], []
 with torch.no_grad():
-    for inputs, labels_batch in test_loader:
+    for inputs, labels_batch, filenames in test_loader:
         inputs = inputs.to(device)
         outputs = torch.sigmoid(model(inputs)).cpu().numpy().round()
         preds.extend(outputs)
         targets.extend(labels_batch.numpy())
+        names.extend(filenames)
+
+false_positives = [fname for pred, actual, fname in zip(preds, targets, names) if pred == 1 and actual == 0]
+false_negatives = [fname for pred, actual, fname in zip(preds, targets, names) if pred == 0 and actual == 1]
+
+print("False Positives:", false_positives)
+print("False Negatives:", false_negatives)
 
 print("====== final results ======:")
 print(f"accuracy:   {accuracy_score(targets, preds)}")
