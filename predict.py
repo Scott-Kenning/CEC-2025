@@ -26,6 +26,13 @@ transform = transforms.Compose([
     transforms.Normalize(mean, std)
 ])
 
+# This is the prompt used to generate the heatmap overlay.
+# I have a very accurate MRI prediction model. 
+# I now want to show a heatmap to demonstrate where the tumor likely is. 
+# Please walk me through that process given my training code: [training code here]
+#
+# From this prompt, we walked through steps for how to use Grad-CAM. The following code
+# is the result of fixing up ChatGPT's fairly broken code.
 def generate_gradcam_overlay(model, input_tensor, original_image):
     model.eval()
     target_layer = model.features[-1]
@@ -72,7 +79,7 @@ def generate_gradcam_overlay(model, input_tensor, original_image):
     return overlay
 
 
-def predict_image(image_path):
+def predict_image(image_path, gen_heatmap=True):
     img = Image.open(image_path).convert('RGB')
     img_t = transform(img)
     img_t = img_t.unsqueeze(0).to(device)
@@ -81,24 +88,15 @@ def predict_image(image_path):
         output = model(img_t)
         predicted_prob = torch.sigmoid(output).item()
         prediction = round(predicted_prob)
-    overlay = generate_gradcam_overlay(model, img_t, img)
-    return prediction, predicted_prob, overlay
-
-# Reduced version of predict_image for use of test CSV file.
-def predict_image_for_test_suit(image_path):
-    img = Image.open(image_path).convert('RGB')
-    img_t = transform(img)
-    img_t = img_t.unsqueeze(0).to(device)
-
-    with torch.no_grad():
-        output = model(img_t)
-        predicted_prob = torch.sigmoid(output).item()
-        prediction = round(predicted_prob)
-    return prediction, predicted_prob
+    if gen_heatmap:
+        overlay = generate_gradcam_overlay(model, img_t, img)
+        return prediction, predicted_prob, overlay
+    else:
+        return prediction, predicted_prob
 
 if __name__ == "__main__":
-    image_path = '/Users/christian/Desktop/CEC_2025/yes/yes__165.png'
-    # image_path = '/Users/christian/Desktop/CEC_2025/no/no__594.png'
+    # Example usage
+    image_path = '/Users/christian/Desktop/CEC_2025/yes/yes__97.png'
     prediction, probability, overlay = predict_image(image_path)
     print(f'prediction: {prediction}, probability: {probability}')
 

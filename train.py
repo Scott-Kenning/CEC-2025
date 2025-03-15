@@ -1,4 +1,11 @@
-import random
+# The base of this code was built off of ChatGPT and some minor modifications (mentioned below) were from ChatGPT. The initial prompt was as such:
+# I’m creating an application which takes in many brain images and predicts whether there is a tumor or not. 
+# I have about 17000 images labed yes or no for whether or not they contain tumors. 
+# How would you recommend I go about making the most accurate model? 
+# I want to take into account as many ethical considerations as possible, and I want to make an innovative solution. 
+# 
+# From this prompt, we got a base idea for what to go off of, and did further research to find the most accurate model.
+
 from matplotlib import pyplot as plt
 import numpy as np
 import torch
@@ -11,6 +18,7 @@ from PIL import Image
 import seaborn as sns
 import os
 import time
+
 
 data_dir = os.getenv('CEC_2025_dataset')
 if data_dir is None:
