@@ -1,6 +1,8 @@
 import os
 import predict
 import csv
+from PIL import Image
+
 
 def generate_test_case_csv(testing_folder):
     ### Creates/Opens CSV file and writes the filename/tumour present to it
@@ -10,7 +12,8 @@ def generate_test_case_csv(testing_folder):
         writer.writerow(["Image", "Tumor Present?", "Probability %"])
         for file in os.listdir(testing_folder):
             # Get the prediction if an image contains a tumor or not.
-            prediction, probability = predict.predict_image(os.path.join(testing_folder, file), gen_heatmap=False)
+            image = Image.open(os.path.join(testing_folder, file)).convert('RGB')
+            prediction, probability = predict.predict_image(image, gen_heatmap=False)
             is_tumor = ''
             if(prediction == 0):
                 is_tumor = 'no'

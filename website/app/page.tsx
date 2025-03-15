@@ -5,8 +5,10 @@ import ResultDisplay from "./components/ResultDisplay";
 import Link from "next/link";
 
 interface Result {
-  classification: boolean;
+  classification: string;
   confidence: number;
+  error?: string | null;
+  image?: string; // Base64-encoded PNG image of the heatmap
 }
 
 export default function Home() {
@@ -41,6 +43,7 @@ export default function Home() {
         body: formData,
       });
       const data: Result = await res.json();
+      console.log("Result:" , data);
       setResult(data);
     } catch (error) {
       console.error("Error uploading image:", error);

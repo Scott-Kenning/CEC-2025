@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
-  const externalApiUrl = process.env.EXTERNAL_API_URL || "https://example.com/api/classify";
+  const externalApiUrl = "https://cec-2025.onrender.com/classify";
 
   try {
     const externalResponse = await fetch(externalApiUrl, {
@@ -16,15 +16,13 @@ export async function POST(request: Request) {
       body: formData,
     });
 
+    console.log("External response:", externalResponse);
     const data = await externalResponse.json();
+    console.log("Data:", data);
 
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error processing image:", error);
-    return NextResponse.json(
-      { classification: "Positive", confidence: 0.9783 },
-      { status: 500 }
-    )
     return NextResponse.json(
       { error: "Error processing image" },
       { status: 500 }

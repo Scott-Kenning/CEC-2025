@@ -79,8 +79,7 @@ def generate_gradcam_overlay(model, input_tensor, original_image):
     return overlay
 
 
-def predict_image(image_path, gen_heatmap=True):
-    img = Image.open(image_path).convert('RGB')
+def predict_image(img, gen_heatmap=True):
     img_t = transform(img)
     img_t = img_t.unsqueeze(0).to(device)
 
@@ -95,13 +94,12 @@ def predict_image(image_path, gen_heatmap=True):
         return prediction, predicted_prob
 
 if __name__ == "__main__":
-    # Example usage
-    image_path = '/Users/christian/Desktop/CEC_2025/yes/yes__97.png'
-    prediction, probability, overlay = predict_image(image_path)
+    image = Image.open('/Users/christian/Desktop/CEC_2025/yes/yes__319.png').convert('RGB')
+    # image_path = '/Users/christian/Desktop/CEC_2025/no/no__594.png'
+    prediction, probability, overlay = predict_image(image)
     print(f'prediction: {prediction}, probability: {probability}')
 
     plt.figure(figsize=(8, 8))
     plt.imshow(cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB))
-    plt.title("Grad-CAM Heatmap Overlay")
     plt.axis('off')
     plt.show()
