@@ -84,6 +84,18 @@ def predict_image(image_path):
     overlay = generate_gradcam_overlay(model, img_t, img)
     return prediction, predicted_prob, overlay
 
+# Reduced version of predict_image for use of test CSV file.
+def predict_image_for_test_suit(image_path):
+    img = Image.open(image_path).convert('RGB')
+    img_t = transform(img)
+    img_t = img_t.unsqueeze(0).to(device)
+
+    with torch.no_grad():
+        output = model(img_t)
+        predicted_prob = torch.sigmoid(output).item()
+        prediction = round(predicted_prob)
+    return prediction, predicted_prob
+
 if __name__ == "__main__":
     image_path = '/Users/christian/Desktop/CEC_2025/yes/yes__165.png'
     # image_path = '/Users/christian/Desktop/CEC_2025/no/no__594.png'
