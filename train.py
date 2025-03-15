@@ -28,16 +28,18 @@ print(f"using device: {device}")
 # mean and std taken from imagenet dataset
 mean = [0.485, 0.456, 0.406]
 std = [0.229, 0.224, 0.225]
+size = (128, 128)
 train_transform = transforms.Compose([
-    transforms.Resize((128, 128)),
+    transforms.Resize(size),
     transforms.RandomHorizontalFlip(),
-    transforms.RandomRotation(10),
-    transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1, hue=0.1),
+    transforms.RandomRotation(360),
+    transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0, hue=0),
+    transforms.GaussianBlur(5, sigma=(0.1, 2.0)),
     transforms.ToTensor(),
     transforms.Normalize(mean, std)
 ])
 val_test_transform = transforms.Compose([
-    transforms.Resize((128, 128)),
+    transforms.Resize(size),
     transforms.ToTensor(),
     transforms.Normalize(mean, std)
 ])
