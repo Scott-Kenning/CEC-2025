@@ -15,4 +15,5 @@ After installing Python, follow the steps to install the requirements and run th
 
 ## Running the website
 - In the root folder, run `python -m uvicorn main:app --reload`
+- create a file called .env in `/website` with the following line: `API_URL = "http://127.0.0.1:8000/classify"`
 - In a separate terminal in the website folder, run `npm install && npm run dev`
