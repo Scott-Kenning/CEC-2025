@@ -16,7 +16,9 @@ export async function POST(request: Request) {
       body: formData,
     });
 
+    console.log("External response:", externalResponse);
     const data = await externalResponse.json();
+    console.log("Data:", data);
 
     return NextResponse.json(data);
   } catch (error) {
