@@ -105,7 +105,7 @@ model = model.to(device)
 
 criterion = nn.BCEWithLogitsLoss()
 optimizer = optim.Adam(model.parameters(), lr=1e-4)
-scaler = torch.cuda.amp.GradScaler(enabled=torch.cuda.is_available())
+scaler = torch.amp.GradScaler('cuda',enabled=torch.cuda.is_available())
 
 print("starting training...")
 num_epochs = 10
@@ -118,7 +118,7 @@ for epoch in range(num_epochs):
         optimizer.zero_grad()
 
         if device.type == 'cuda':
-            with torch.cuda.amp.autocast():
+            with torch.amp.autocast('cuda'):
                 outputs = model(inputs)
                 loss = criterion(outputs, labels)
 
